@@ -1,14 +1,18 @@
 import { Gif } from '@/types'
 import Image from 'next/image'
-import SearchForm from './(feature)/components/SearchForm'
+import SearchForm from '../components/SearchForm'
 
-export default async function Home() {
-  const res = await fetch(process.env.BACKEND_URL + '/api/home')
+export default async function Page({
+  searchParams
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const query = (await searchParams).query
+  const res = await fetch(`http://localhost:3000/api/search?query=${query}`)
   const { data } = await res.json()
-
   return (
-    <div className='flex flex-col min-h-dvh '>
-      <div className='flex flex-col container flex-1 mx-auto py-4 gap-4'>
+    <div className='flex flex-col flex-1'>
+      <div className='flex flex-col container h-full mx-auto'>
         <SearchForm />
         <div className='grid grid-cols-4 gap-4'>
           {data.map((n: Gif) => (
